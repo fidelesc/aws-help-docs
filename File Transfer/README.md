@@ -38,3 +38,8 @@ python process_s3_files.py -bucket my-bucket -prefix my-prefix -max_workers 4
 
 where `my-bucket` is the name of the S3 bucket to process, `my-prefix` is the file prefix to match, and `4` is the maximum number of workers of threads
 
+
+## Notes
+
+While it is possible to open image files with Opencv on the Dask application, I was not able to use pyexiftool correctly. I am still using metadata extraction from files copied to local.
+
