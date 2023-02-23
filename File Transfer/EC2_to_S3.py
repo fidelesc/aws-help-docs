@@ -15,7 +15,7 @@ s3_key: The key to use for the S3 object.
 
 The function uploads the file to S3 using the S3 client object.
 
-The main code block of the script uses the argparse library to parse the command-line arguments. It then creates an S3 client object and sets the name of the S3 bucket to upload to, the local path of the folder containing the files to upload, and the maximum number of threads to use for uploading the files. It also uses a ThreadPoolExecutor to upload the files in parallel and waits for all uploads to complete.
+The main code block of the script uses the argparse library to parse the command-line arguments. It then creates an S3 client object and sets the name of the S3 bucket to upload to, the local path of the folder containing the files to upload, the S3 prefix for uploaded files, and the maximum number of threads to use for uploading the files. It also uses a ThreadPoolExecutor to upload the files in parallel and waits for all uploads to complete.
 
 Using threads allows the script to upload multiple files at the same time, which can improve performance when uploading a large number of files or large files.
 """
@@ -27,16 +27,27 @@ import argparse
 
 
 # Define a function to upload a single file to the S3 bucket
-def upload_file(local_file_path, s3_key):
+def upload_file(s3, bucket_name, local_file_path, s3_key):
     """
     Uploads a single file to the S3 bucket.
 
     Args:
+        s3: The S3 client object.
+        bucket_name: The name of the S3 bucket to upload the file to.
         local_file_path: The local path of the file to upload.
-        s3_key: The S3 key to use for the uploaded file.
+        s3_key: The key to use for the S3 object of the uploaded file.
     """
-    # Upload the file to S3
-    s3.Bucket(bucket_name).upload_file(local_path, s3_key)
+    try:
+        # Upload the file to S3
+        # s3.Bucket(bucket_name).upload_file(local_path, s3_key)
+        s3.upload_file(local_file_path, bucket_name, s3_key)
+        print(f"Uploaded: {local_file_path}")
+        return True
+    except:
+        print(f"Failed upload: {local_file_path}")
+        return False
+    
+
 
 
 if __name__ == '__main__':
@@ -60,19 +71,21 @@ if __name__ == '__main__':
     local_path = args.path
 
     # Set the maximum number of threads to use for uploading files
-    max_workers = args.max_workers
+    max_workers = int(args.max_workers)
     
     # Set S3 prefix for uploaded files
     prefix = args.prefix
-   
     
     # Use a ThreadPoolExecutor to upload the files in parallel
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = []
-        for filename in os.listdir(local_path):
-            local_file_path = os.path.join(local_path, filename)
-            s3_key = os.path.join(prefix, filename)
-            futures.append(executor.submit(upload_file, local_file_path, s3_key))
+        for path, subdirs, file_list in os.walk(local_path):
+            for filename in file_list:
+                local_file_path = os.path.join(path, filename)
+                s3_key = os.path.join(prefix, filename)
+                # Skip over any directories
+                if os.path.isfile(local_file_path):
+                    futures.append(executor.submit(upload_file, s3, bucket_name, local_file_path, s3_key))
 
         # Wait for all uploads to complete
         for future in futures:
