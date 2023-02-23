@@ -66,6 +66,7 @@ if __name__ == '__main__':
     
     # Create the destination folder if it doesn't already exist
     if not os.path.exists(local_path):
+        print(f"Creating local directory {local_path}")
         os.makedirs(local_path)
 
     # Create a Bucket object for the specified bucket
