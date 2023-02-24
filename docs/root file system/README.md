@@ -25,7 +25,7 @@ In summary, there are several EBS volume types available, each with different pe
 
 As an example of how EBS volumes can impact performance in practice, we conducted a timed run of the same code on an EC2 AMI running on a t2.2xlarge instance, but using different root systems. The code checks all files (RGB images) in a given path for corruption, and extracts the metadata.
 
-We measured the time it took to list the files and extract the metadata on the same instance and image, but using different EBS volumes. The results are shown in the table below:
+We measured the time (in seconds) it took to list the files and extract the metadata on the same instance and image, but using different EBS volumes. The results are shown in the table below:
 
 | Files | gp3 | io1 | io2 |
 | --- | --- | --- | --- |
