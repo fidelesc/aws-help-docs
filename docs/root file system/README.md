@@ -27,12 +27,11 @@ As an example of how EBS volumes can impact performance in practice, we conducte
 
 We measured the time it took to list the files and extract the metadata on the same instance and image, but using different EBS volumes. The results are shown in the table below:
 
-```
 | Files | gp3 | io1 | io2 |
 | --- | --- | --- | --- |
 | 1000 RGB images | 735 | 295 | 292 |
 | 3000 RGB images | 1267 | 878 | 873 |
 | 10000 RGB images | 7544 | 2970 | 2968 |
-```
+
 These results demonstrate how the choice of EBS volume type can significantly impact the performance of workloads involving large numbers of files. In particular, the io2 volume consistently outperformed the other volume types, even on workloads involving tens of thousands of files.
 
