@@ -29,6 +29,7 @@ We measured the time it took to list the files and extract the metadata on the s
 
 ```
 | Files | gp3 | io1 | io2 |
+| --- | --- | --- | --- |
 | 1000 RGB images | 735 | 295 | 292 |
 | 3000 RGB images | 1267 | 878 | 873 |
 | 10000 RGB images | 7544 | 2970 | 2968 |
