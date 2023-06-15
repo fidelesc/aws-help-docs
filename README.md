@@ -1,2 +1,2 @@
-# aws-scripts
-Base scripts for AWS backend and architecture usage
+# aws-docs
+Basic documentation for AWS backend and architecture usage
